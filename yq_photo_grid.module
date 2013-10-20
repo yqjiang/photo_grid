@@ -1,0 +1,14 @@
+<?php
+
+function yq_photo_grid_field_formatter_info() {
+  $formatters = array(
+    'yq_photo_grid' => array(
+      'label' => t('photogrid'),
+      'field types' => array('image', 'media'),
+      'settings' => array(
+        'zoom_factor' => '1.5',
+      ),
+    ),
+  );
+  return $formatters;
+}

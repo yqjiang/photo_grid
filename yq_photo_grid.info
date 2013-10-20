@@ -1,0 +1,4 @@
+name = yq_photo_grid
+description = Provides image formatter for Google like photowall effect.
+core = 7.x
+php = 5.2
