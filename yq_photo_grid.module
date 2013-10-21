@@ -5,10 +5,73 @@ function yq_photo_grid_field_formatter_info() {
     'yq_photo_grid' => array(
       'label' => t('photogrid'),
       'field types' => array('image', 'media'),
-      'settings' => array(
-        'zoom_factor' => '1.5',
-      ),
+      'settings' => array(),
     ),
   );
   return $formatters;
+}
+
+function yq_photo_grid_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'example') . '/includes/views',
+    'template path' => drupal_get_path('module', 'yq_photo_grid') . '/themes',
+  );
+}
+function yq_photo_grid_theme() {
+  return array(
+    'yq_photo_grid' => array(
+      'variables' => array(
+        'items' => NULL,
+        'field_type' => NULL,
+      ),
+      'template' => 'theme/yq_photo_grid',
+      'file' => 'theme/theme.inc',
+    ),
+  );
+}
+
+function photowall_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $form = array(
+    '#tree' => TRUE,
+  );
+  if ($field['type'] == 'image' || $field['type'] == 'media') {
+    $form['numOfRows'] = array(
+      '#title' => t('number of rows'),
+      '#type' => 'textfield',
+      '#size' => 2,
+      '#default_value' => $settings['numOfRows'],
+      '#element_validate' => array('element_validate_number'),
+      '#required' => TRUE,
+      '#description' => t('Enter value between 1 to 10 for better results.'),
+    );
+  }
+  return $form;
+}
+
+function yq_photo_grid_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  dsm($entity_type,'$entity_type');
+  dsm($entity,'$entity');
+  dsm($field,'$field');
+  dsm($instance,'$instance');
+  dsm($langcode,'$langcode');
+  dsm($items,'$items');
+  dsm($display,'$display');
+  $settings=$display['settings'];
+  $element = array();
+  if (!isset($settings['numOfRows'])) {
+    $settings['numOfRows'] = '1.5';
+  }
+  if (count($items)) {
+    $element[] = array(
+      '#theme' => 'yq_photo_grid',
+      '#items' => $items,
+      '#field_type' => $field['type'],
+      '#num_of_rows'=>$settings['numOfRows'],
+    );
+  }
+  dsm($element,'$element');
+  return $element;
 }
